@@ -1,0 +1,28 @@
+使用docker-compose启动
+docker-compose.yml       
+version: '2'
+services:
+  fluentd:
+    image: fluentd
+    ports:
+    - "24224:24224"
+  elasticsearch:
+    image: elasticsearch
+    ports:
+    - "9200:9200"
+    volumes:
+    - /data/efkdate/:/usr/share/elasticsearch/data
+  kibana:
+    image: kibana
+    ports:
+    - "5601:5601"
+    environment:
+    - ELASTICSEARCH_URL=http://elasticsearch:9200
+
+	
+容器启动要加的参数
+--log-driver=fluentd \
+--log-opt fluentd-address=ip:24224 \
+--log-opt fluentd-buffer-limit=64m \
+--log-opt fluentd-async-connect=true \
+--log-opt tag="docker.{{.Name}}" \
