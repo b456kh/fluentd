@@ -8,7 +8,7 @@ RUN apk --no-cache --update add sudo build-base ruby-dev && \
 
     sudo gem install fluent-plugin-elasticsearch fluent-plugin-record-reformer  fluent-plugin-secure-forward  fluent-plugin-concat && \
 
-    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo -u fluent gem sources -c && \
+    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo gem sources -c && \
     apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
 
 EXPOSE 24284
