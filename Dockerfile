@@ -1,17 +1,7 @@
-FROM fluent/fluentd:latest-onbuild
-MAINTAINER YOUR_NAME <b456kh@gmail.com>
-WORKDIR /home/fluent
-ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
-
-USER root
-RUN apk --no-cache --update add sudo build-base ruby-dev && \
-
-    sudo gem install fluent-plugin-elasticsearch fluent-plugin-record-reformer  fluent-plugin-secure-forward  fluent-plugin-concat && \
-
-    rm -rf /home/fluent/.gem/ruby/2.3.0/cache/*.gem && sudo gem sources -c && \
-    apk del sudo build-base ruby-dev && rm -rf /var/cache/apk/*
-
-EXPOSE 24284
-
-USER fluent
-CMD exec fluentd -c /fluentd/etc/$FLUENTD_CONF -p /fluentd/plugins $FLUENTD_OPT
+FROM fluent/fluentd
+RUN apk add --update --virtual .build-deps \
+        sudo build-base ruby-dev \
+    && gem install fluent-plugin-elasticsearch fluent-plugin-geoip \
+    && gem sources --clear-all \
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/* /home/fluent/.gem/ruby/2.3.0/cache/*.gem
